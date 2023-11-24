@@ -1,13 +1,46 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import cheerio from 'cheerio';
 
-const inter = Inter({ subsets: ['latin'] })
+const Home = () => {
+  const [kumlaMenu, setKumlaMenu] = useState<string[]>([]);
+  const [silveradoMenu, setSilveradoMenu] = useState<string[]>([]);
 
-export default function Home() {
+  useEffect(() => {
+    const fetchMenus = async () => {
+      const kumlaResponse = await axios.get('https://www.kumlaherrgard.se/menyer-och-catering/lunch/');
+      const silveradoResponse = await axios.get('https://silverado.gastrogate.com/lunch-buffe/');
+
+      const kumlaData = cheerio.load(kumlaResponse.data);
+      const silveradoData = cheerio.load(silveradoResponse.data);
+
+      // Parse the HTML data using cheerio and push it to the state
+      // The selectors used here are placeholders, replace them with the actual selectors from the websites
+      kumlaData('.menu-item').each((index, element) => {
+        setKumlaMenu(oldArray => [...oldArray, kumlaData(element).text()]);
+      });
+
+      silveradoData('.menu-item').each((index, element) => {
+        setSilveradoMenu(oldArray => [...oldArray, silveradoData(element).text()]);
+      });
+    };
+
+    fetchMenus();
+  }, []);
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-    </main>
-  )
-}
+    <div>
+      <h1>Kumla Herrgård Menu</h1>
+      {kumlaMenu.map((item, index) => (
+        <p key={index}>{item}</p>
+      ))}
+
+      <h1>Silverado Menu</h1>
+      {silveradoMenu.map((item, index) => (
+        <p key={index}>{item}</p>
+      ))}
+    </div>
+  );
+};
+
+export default Home;
