@@ -17,7 +17,7 @@ const Home = () => {
 
       // Parse the HTML data using cheerio and push it to the state
       // The selectors used here are placeholders, replace them with the actual selectors from the websites
-      kumlaData('/html/body/div[1]/div/div/div/div/article/div[2]').each((index, element) => {
+      kumlaData('#post-105 > div.entry-content > p:nth-child(14)').each((index, element) => {
         setKumlaMenu(oldArray => [...oldArray, kumlaData(element).text()]);
       });
 
