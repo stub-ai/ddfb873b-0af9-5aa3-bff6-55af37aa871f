@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import cheerio from 'cheerio';
+import Header from '../components/Header';
 
 const Home = () => {
   const [kumlaMenu, setKumlaMenu] = useState<string[]>([]);
@@ -29,16 +30,22 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Kumla Herrgård Menu</h1>
-      {kumlaMenu.map((item, index) => (
-        <p key={index}>{item}</p>
-      ))}
-
-      <h1>Silverado Menu</h1>
-      {silveradoMenu.map((item, index) => (
-        <p key={index}>{item}</p>
-      ))}
+    <div className="p-4">
+      <Header />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h2 className="text-xl font-bold mb-2">Kumla Herrgård Menu</h2>
+          {kumlaMenu.map((item, index) => (
+            <p key={index} className="mb-1">{item}</p>
+          ))}
+        </div>
+        <div>
+          <h2 className="text-xl font-bold mb-2">Silverado Menu</h2>
+          {silveradoMenu.map((item, index) => (
+            <p key={index} className="mb-1">{item}</p>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
